@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>نظام فحص التمويل</title>
+
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+
+font-family:Tahoma,Arial,sans-serif;
+background:#f3f6fb;
+padding:25px;
+margin:0;
+
+}
+
+
+.container{
+
+max-width:480px;
+margin:auto;
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 8px 25px rgba(0,0,0,.1);
+
+}
+
+
+.logo{
+
+text-align:center;
+font-size:28px;
+font-weight:bold;
+color:#0b3d91;
+
+}
+
+
+.subtitle{
+
+text-align:center;
+color:#777;
+margin:10px 0 25px;
+
+}
+
+
+.progress{
+
+display:flex;
+justify-content:space-between;
+margin-bottom:25px;
+
+}
+
+
+.circle{
+
+width:35px;
+height:35px;
+border-radius:50%;
+background:#ddd;
+display:flex;
+justify-content:center;
+align-items:center;
+font-weight:bold;
+
+}
+
+
+.circle.active{
+
+background:#0b3d91;
+color:white;
+
+}
+
+
+.step{
+
+display:none;
+
+}
+
+
+.step.active{
+
+display:block;
+
+}
+
+
+h3{
+
+color:#0b3d91;
+
+}
+
+
+input,select{
+
+width:100%;
+padding:14px;
+margin:8px 0;
+border-radius:12px;
+border:1px solid #ddd;
+font-size:15px;
+
+}
+
+
+
+.companies{
+
+display:flex;
+gap:10px;
+margin:15px 0;
+
+}
+
+
+
+.company{
+
+flex:1;
+border:2px solid #ddd;
+padding:15px 5px;
+text-align:center;
+border-radius:12px;
+cursor:pointer;
+font-weight:bold;
+
+}
+
+
+
+.company.selected{
+
+border-color:#0b3d91;
+background:#e8f1ff;
+
+}
+
+
+
+button{
+
+width:100%;
+padding:14px;
+background:#0b3d91;
+color:white;
+border:none;
+border-radius:12px;
+font-size:16px;
+cursor:pointer;
+
+}
+
+
+
+button:hover{
+
+opacity:.9;
+
+}
+
+
+
+.result{
+
+padding:20px;
+border-radius:15px;
+line-height:1.8;
+background:#eee;
+
+}
+
+
+
+.result.success{
+
+background:#e8f8ee;
+color:#087a35;
+
+}
+
+
+
+.result.failed{
+
+background:#ffe8e8;
+color:#a00000;
+
+}
+
+
+
+.pdf{
+
+display:block;
+margin-top:15px;
+text-align:center;
+padding:12px;
+background:#111;
+color:white;
+border-radius:10px;
+text-decoration:none;
+
+}
+
+
+</style>
+
+</head>
+
+
+
+<body>
+
+
+<div class="container">
+
+
+<div class="logo">
+💳 نظام فحص التمويل
+</div>
+
+
+<div class="subtitle">
+فحص أهلية التمويل وإصدار تقرير
+</div>
+
+
+
+<div class="progress">
+
+<div id="c1" class="circle active">
+1
+</div>
+
+
+<div id="c2" class="circle">
+2
+</div>
+
+
+<div id="c3" class="circle">
+3
+</div>
+
+
+</div>
+
+
+
+
+<div id="step1" class="step active">
+
+
+<h3>
+المعلومات الشخصية
+</h3>
+
+
+
+<input id="name" placeholder="الاسم الكامل">
+
+
+<input id="age" type="number" placeholder="العمر">
+
+
+<select id="job">
+
+<option value="">
+اختر الوظيفة
+</option>
+
+<option value="عسكري">
+عسكري
+</option>
+
+<option value="مدني">
+مدني
+</option>
+
+<option value="سعودي خاص">
+سعودي قطاع خاص
+</option>
+
+<option value="مقيم حكومي">
+مقيم حكومي
+</option>
+
+<option value="مقيم خاص">
+مقيم خاص
+</option>
+
+<option value="متقاعد">
+متقاعد
+</option>
+
+</select>
+
+
+
+<input id="serviceMonths" type="number" placeholder="مدة الخدمة بالأشهر">
+
+
+<button onclick="nextStep()">
+التالي
+</button>
+
+
+</div>
+<div id="step2" class="step">
+
+
+<h3>
+بيانات التمويل
+</h3>
+
+
+<input id="salary" type="number" placeholder="الراتب الشهري">
+
+
+<input id="commitments" type="number" placeholder="الالتزامات الشهرية">
+
+
+
+<h4>
+اختر شركة التمويل
+</h4>
+
+
+<div class="companies">
+
+
+<div class="company" onclick="selectCompany('aqara',this)">
+أكوارا
+<br>
+للتمويل
+</div>
+
+
+<div class="company" onclick="selectCompany('tamara',this)">
+تمارا
+</div>
+
+
+<div class="company" onclick="selectCompany('tabby',this)">
+تابي
+</div>
+
+
+</div>
+
+
+<input id="company" type="hidden">
+
+
+
+<input id="productAmount" type="number" placeholder="مبلغ المنتجات">
+
+
+
+<button onclick="checkFinance()">
+فحص الطلب
+</button>
+
+
+</div>
+
+
+
+
+<div id="step3" class="step">
+
+
+<h3>
+النتيجة
+</h3>
+
+
+
+<div id="result" class="result">
+
+</div>
+
+
+
+<a id="pdf" class="pdf" target="_blank">
+
+</a>
+
+
+</div>
+
+
+
+</div>
+
+
+
+<script>
+
+
+let customer={};
+
+
+
+function changeStep(number){
+
+
+document
+.querySelectorAll(".circle")
+.forEach(e=>{
+
+e.classList.remove("active");
+
+});
+
+
+document
+.getElementById("c"+number)
+.classList.add("active");
+
+
+}
+
+
+
+function nextStep(){
+
+
+let name =
+document.getElementById("name").value;
+
+
+let age =
+Number(document.getElementById("age").value);
+
+
+let job =
+document.getElementById("job").value;
+
+
+
+if(
+name==="" ||
+age<=0 ||
+job===""
+
+){
+
+alert("أكمل البيانات الشخصية");
+
+return;
+
+}
+
+
+
+customer={
+
+name:name,
+
+age:age,
+
+job:job,
+
+serviceMonths:
+Number(
+document.getElementById("serviceMonths").value || 0
+)
+
+};
+
+
+
+document
+.getElementById("step1")
+.classList.remove("active");
+
+
+document
+.getElementById("step2")
+.classList.add("active");
+
+
+changeStep(2);
+
+
+}
+
+
+
+
+
+function selectCompany(value,element){
+
+
+document
+.querySelectorAll(".company")
+.forEach(e=>{
+
+e.classList.remove("selected");
+
+});
+
+
+element.classList.add("selected");
+
+
+document
+.getElementById("company")
+.value=value;
+
+
+}
+
+
+
+
+
+
+
+async function checkFinance(){
+
+
+
+let data={
+
+
+name:customer.name,
+
+age:customer.age,
+
+job:customer.job,
+
+serviceMonths:customer.serviceMonths,
+
+
+salary:
+Number(
+document.getElementById("salary").value
+),
+
+
+commitments:
+Number(
+document.getElementById("commitments").value
+),
+
+
+company:
+document.getElementById("company").value,
+
+
+productAmount:
+Number(
+document.getElementById("productAmount").value
+)
+
+
+};
+
+
+
+if(
+data.salary<=0 ||
+data.company===""
+
+){
+
+alert("أكمل بيانات التمويل");
+
+return;
+
+}
+
+
+
+try{
+
+
+let response =
+await fetch(
+"http://localhost:3000/check",
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:
+JSON.stringify(data)
+
+}
+
+);
+
+
+
+let result =
+await response.json();
+
+
+
+document
+.getElementById("step2")
+.classList.remove("active");
+
+
+document
+.getElementById("step3")
+.classList.add("active");
+
+
+changeStep(3);
+
+
+
+let box =
+document.getElementById("result");
+
+
+
+if(result.status==="eligible"){
+
+
+box.className="result success";
+
+
+box.innerHTML=
+
+`
+<h3>✅ قبول مبدئي</h3>
+
+<p>${result.message}</p>
+
+<p>
+نسبة الالتزام:
+${result.commitmentRatio}
+</p>
+
+`;
+
+
+
+}else{
+
+
+box.className="result failed";
+
+
+box.innerHTML=
+
+`
+<h3>❌ لم يتم قبول الطلب</h3>
+
+<p>${result.message}</p>
+
+<p>
+نسبة الالتزام:
+${result.commitmentRatio}
+</p>
+
+`;
+
+}
+
+
+
+if(result.pdf){
+
+
+let link =
+document.getElementById("pdf");
+
+
+link.href =
+"http://localhost:3000"+result.pdf;
+
+
+link.innerHTML =
+"📄 فتح تقرير PDF";
+
+
+}
+
+
+
+}
+
+
+catch(error){
+
+
+console.error(error);
+
+
+alert(
+"حدث خطأ أثناء الاتصال بالسيرفر"
+);
+
+
+}
+
+
+
+}
+
+
+
+</script>
+
+
+</body>
+
+</html>
